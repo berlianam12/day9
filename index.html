@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <style>
+      h1  {
+        color: palevioletred;
+      }
+      #map {
+        height: 400px;
+        width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      Contact Us!
+    </h1>
+
+    <form action="">
+      <label for="nama">Nama : </label>
+      <input type="text" id="nama" />
+      <br>
+      <br> 
+      <label for="provinsi">Provinsi : </label>
+      <select name="provinsi" id="provinsi">
+        <option value="">Pilih Provinsi</option>
+        <option value="Jawa Barat">Jawa Barat</option>
+        <option value="Jawa Tengah">Jawa Tengah</option>
+        <option value="DKI Jakarta">DKI Jakarta</option>
+      </select>
+      <br>
+      <br>
+      <label for="city">Kota:</label>
+      <select id="city" required>
+        <option>Pilih Kota</option>
+      </select>
+      <br>
+      <br>
+      <label for="message">Pesan : </label>
+      <textarea
+        name=""
+        id="pesan"
+        placeholder="ketik pesan Anda disini..."
+      ></textarea>
+      <br>
+      <br>
+      <button id="button">Kirim!</button>
+      <br>
+      <br>
+      <div id="map"></div>
+      <script>
+        $(document).ready(function () {
+          var kotaProvinsi = {
+            "Jawa Barat": ["Bandung", "Bekasi", "Bogor", "Depok"],
+            "Jawa Tengah": ["Semarang", "Surakarta", "Magelang", "Tegal"],
+            "DKI Jakarta": [
+              "Jakarta Pusat",
+              "Jakarta Barat",
+              "Jakarta Selatan",
+            ],
+          };
+
+          $("#provinsi").change(function () {
+            var provinsi = $(this).val();
+            var kota = kotaProvinsi[provinsi] || [];
+
+            $("#city").empty().append('<option value="">Pilih Kota</option>');
+
+            $.each(kota, function (i, city) {
+              $("#city").append(
+                '<option value="' + city + '">' + city + "</option>"
+              );
+            });
+          });
+          $("#button").click(function () {
+            var nama = $("#nama").val();
+            var provinsi = $("#provinsi").val();
+            var kota = $("#city").val();
+            var pesan = $("#pesan").val();
+            if (nama && provinsi && city && pesan) {
+              var whatsappMessage = `Halo! saya ${nama} dari ${kota}, ${provinsi}. ${pesan}`;
+              var whatsappURL = `https://wa.me/?text=${encodeURIComponent(
+                whatsappMessage
+              )}`;
+              window.open(whatsappURL, "_blank");
+            } else {
+              alert("Mohon isi semua data!");
+            }
+          });
+
+          var map = L.map("map").setView(
+            [-6.225184488254975, 106.80910106527001],
+            19
+          );
+          L.tileLayer(
+            'https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=VeXILbZc6PBHuCE8De5y',
+            {
+              attribution:
+                '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+            }
+          ).addTo(map);
+        });
+      </script>
+    </form>
+  </body>
+</html>
